@@ -19,12 +19,12 @@
 | 주차 | 학습 주제 | 상세 내용 |
 | :-- | :--- | :--- |
 | **1주차** | 자료구조 개요 | 자료구조의 정의 및 알고리즘 복잡도 (Big-O) |
-| **2주차** | ArrayList | ArrayList, Polynomial, Matrix | |
-| **3주차** | LinkedList | SinglyLinkedList, CircularLinkedList, DoublyLinkedList, DoublyCircularLinkedList |
-| **4주차** | Stack&Queue | Stack, Queue, Deque |
-| **5주차** | Tree |Pre/In/Post-order |
-| **6주차** | I |  |
-| **7주차** | 
+| **2주차** | ArrayList | Array, ArrayList, Polynomial, Matrix | |
+| **3주차** | LinkedList | Singly, Circular, Doubly, DoublyCircular |
+| **4주차** | Stack&Queue | Stack, Queue, Deque, Expression Notation, Maze Problem |
+| **5주차** | Tree |  |
+| **6주차** | BST(Binary Search Tree) |  |
+| **7주차** | Balanced Search Tree | AVL Tree, RB Tree, 2-3 Tree, 2-3-4 Tree, LLRB Tree, B-Tree, B*-Tree, B+Tree|
 | **8주차** | **중간고사** | 
 | **9주차** | 
 | **10주차** |
