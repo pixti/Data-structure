@@ -16,14 +16,14 @@
 
 ### 강의 커리큘럼
 
-| 주차 | 학습 주제 | 상세 내용 | 비고 |
-| :-- | :--- | :--- | :--- |
-| **1주차** | 자료구조 개요 | 자료구조의 정의 및 알고리즘 복잡도 (Big-O) | |
+| 주차 | 학습 주제 | 상세 내용 |
+| :-- | :--- | :--- |
+| **1주차** | 자료구조 개요 | 자료구조의 정의 및 알고리즘 복잡도 (Big-O) |
 | **2주차** | ArrayList | ArrayList, Polynomial, Matrix | |
-| **3주차** | LinkedList | SinglyLinkedList, CircularLinkedList, DoublyLinkedList, DoublyCircularLinkedList | |
-| **4주차** | Stack&Queue |  | |
-| **5주차** |  | 선형 큐, 원형 큐, 우선순위 큐 | |
-| **6주차** | 트리 (Tree) I | 이진 트리 정의 및 순회 (Pre/In/Post-order) | |
+| **3주차** | LinkedList | SinglyLinkedList, CircularLinkedList, DoublyLinkedList, DoublyCircularLinkedList |
+| **4주차** | Stack&Queue | Stack, Queue, Deque |
+| **5주차** | Tree |Pre/In/Post-order |
+| **6주차** | I |  |
 | **7주차** | 
 | **8주차** | **중간고사** | 
 | **9주차** | 
