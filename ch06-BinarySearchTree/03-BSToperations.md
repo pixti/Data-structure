@@ -17,12 +17,12 @@
 > * **기본 케이스 (성공)**: $k$와 $p.id$가 같으면 해당 노드를 반환합니다.  
 > * **재귀 단계**:  
 >   * $k < p.id$ 이면 `TreeSearch(p.left, k)`를 호출합니다.  
->   * $k > p.id$ 이면 `TreeSearch(p.right, k)`를 호출합니다.  
+>   * $k > p.id$ 이면 `TreeSearch(p.right, k)`를 호출합니다.
 
-### 4-3. 탐색 성공과 실패
+<img width="833" height="528" alt="image" src="https://github.com/user-attachments/assets/354d8765-2798-40c2-8047-185f67e4dbdd" />
 
-<img width="990" height="481" alt="image" src="https://github.com/user-attachments/assets/480ad90a-9c46-4891-99bc-591163838f6a" />  
-  
+
+### 4-3. 탐색 성공과 실패  
 탐색의 결과는 경로의 끝이 어디냐에 따라 두 가지로 나뉩니다.    
 
 * **성공적인 탐색 (Successful Search)**: 루트에서 시작하여 키 $x$를 포함하는 내부 노드에서 멈추는 경우입니다.   
@@ -33,6 +33,8 @@
 | **종료 지점** | 키가 일치하는 실제 노드 | `null` (External Node) |  
 | **반환값** | 해당 노드의 Value | `null` |  
 | **비교 횟수** | 해당 노드의 레벨 + 1 | 해당 경로의 전체 높이만큼 |  
+
+<img width="990" height="481" alt="image" src="https://github.com/user-attachments/assets/480ad90a-9c46-4891-99bc-591163838f6a" /> 
 
 ### 4-4. 시간 복잡도 분석 (Complexity Analysis)
 탐색 연산의 효율성은 트리의 '모양'에 의해 결정되는 **높이($h$)** 에 비례합니다.
