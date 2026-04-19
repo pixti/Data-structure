@@ -1,16 +1,16 @@
-## 3. 이진 트리의 순회 (Binary Tree Traversal)
+## 이진 트리의 순회 (Binary Tree Traversal)
 이진 트리에서 수행되는 대부분의 연산(출력, 복사, 삭제 등)은 트리를 순회하면서 진행됩니다.  
 모든 순회 방식은 루트 노드에서 시작하며, 각 노드를 반드시 1번씩 방문해야 종료됩니다.  
 
-### 3-1. Preorder Traversal (전위 순회, V → L → R ) 
+### 3. Preorder Traversal (전위 순회, V→L→R) 
 전위 순회는 이름 그대로 현재 노드를 먼저 처리한 후, 자식 노드들을 탐색합니다.  
 탐색의 흐름은 항상 왼쪽에서 오른쪽으로 진행됩니다.  
   
-N (Node) / V (Visit): 현재 노드를 방문합니다.  
+V (Visit): 현재 노드를 방문합니다.  
 L (Left): 왼쪽 서브트리를 순회합니다.  
 R (Right): 오른쪽 서브트리를 순회합니다.  
   
-#### 재귀적 정의:   
+#### 3-1. 재귀적 정의:   
 각 서브트리의 방문 역시 동일한 NLR 방식으로 이루어집니다.     
 즉, 트리 전체가 하나의 커다란 NLR 구조이면서, 그 안의 작은 가지들도 각각 NLR 구조를 가집니다.  
 
@@ -30,69 +30,35 @@ public void preorder(Node n) { // 전위 순회
     }
 }
 ```
-#### 전위 순회(Preorder) 알고리즘 실행 과정       
-**N(현재 노드 방문) → L(왼쪽 서브트리 이동) → R(오른쪽 서브트리 이동)** 순서에 따라 수행되며,   
-R은 현재 단계의 L 과정이 완전히 종료될 때까지 시스템 스택(Stack)에서 대기합니다.  
+#### 3-2. Preorder Traversal(전위 순회) 단계별 상세 실행 과정 (Step 1 ~ 8)       
+전위 순회는 **루트 노드를 먼저 방문**한 후, 왼쪽과 오른쪽 서브트리를 순차적으로 탐색하는 방식입니다.  
 
-Step 1. preorder(A) 시작   
-N: 노드 A를 방문하여 출력한다. -> **A**  
-L: preorder(B)를 호출하며 이동한다.  
-R: preorder(C)는 스택에 저장되어 대기한다. (L이 끝나야 실행 가능)  
-Stack : preorder(C)
+* **수행 순서:** **N(현재 노드 방문)** → **L(왼쪽 서브트리 이동)** → **R(오른쪽 서브트리 이동)**  
+* **스택 동작:** 오른쪽 자식(R)은 현재 단계의 왼쪽(L) 과정이 완전히 종료될 때까지 시스템 스택(Stack)에서 대기합니다.  
 
-Step 2. preorder(B) 시작  
-N: 노드 B를 방문하여 출력한다. -> **B**  
-L: preorder(D)를 호출하며 이동한다.  
-R: preorder(E)는 스택에 저장되어 대기한다. (L이 끝나야 실행 가능)  
-Stack : preorder(E) -> preorder(C)  
-
-Step 3. preorder(D) 시작  
-N: 노드 D를 방문하여 출력한다. -> **D**  
-L: preorder(G)를 호출하며 이동한다.  
-R: 오른쪽 자식이 없으므로(null) 대기 작업이 없다.  
-Stack : preorder(E) -> preorder(C)  
-
-Step 4. preorder(G) 시작  
-N: 노드 G를 방문하여 출력한다. -> **G**  
-L: 왼쪽 자식이 없으므로(null) 호출을 종료한다.   
-R: 오른쪽 자식이 없으므로(null) 호출을 종료한다.   
-Return: preorder(B)의 R로 **복귀** 한다.   
-Stack : preorder(E) -> preorder(C)  
-
-Step 5. preorder(E) 시작 (Step 2에서 대기하던 preorder(B)의 R 실행)   
-N: 노드 E를 방문하여 출력한다. -> **E**  
-L: preorder(H)를 호출하며 이동한다.   
-R: 오른쪽 자식이 없으므로(null) 대기 작업이 없다.   
-Stack : preorder(C)  
-  
-Step 6. preorder(H) 시작  
-N: 노드 H를 방문하여 출력한다. -> **H**  
-L: 왼쪽 자식이 없으므로(null) 호출을 종료한다.      
-R: 오른쪽 자식이 없으므로(null) 호출을 종료한다.      
-Return: preorder(A)의 R로 **복귀** 한다.   
-Stack : preorder(C)  
-
-Step 7. preorder(C) 시작 (Step 1에서 대기하던 preorder(A)의 R 실행)    
-N: 노드 C를 방문하여 출력한다. -> **C**  
-L: 왼쪽 자식이 없으므로(null) 호출을 종료한다.  
-R: preorder(F)를 호출하며 이동한다.  
-Stack : 비어있음.  
-
-Step 8. preorder(F) 시작  
-N: 노드 F를 방문하여 출력한다. -> **F**  
-L: 자식 노드가 없으므로 호출을 종료한다.   
-R: 자식 노드가 없으므로 호출을 종료한다.    
-Return: preorder(F) → preorder(C) → preorder(A) 순서로 복귀하고 프로그램을 종료한다.  
+| 단계 | 실행 내용 (N → L → R) | 시스템 스택 (대기 중인 R) | 출력 결과 |  
+| :--- | :--- | :--- | :--- |
+| **Step 1** | **preorder(A)** 시작<br>N: 노드 **A** 방문 및 출력<br>L: preorder(B) 호출<br>R: preorder(C) 대기 | `preorder(C)` | **A** |
+| **Step 2** | **preorder(B)** 시작<br>N: 노드 **B** 방문 및 출력<br>L: preorder(D) 호출<br>R: preorder(E) 대기 | `preorder(E)` → `preorder(C)` | **A B** |
+| **Step 3** | **preorder(D)** 시작<br>N: 노드 **D** 방문 및 출력<br>L: preorder(G) 호출<br>R: 없음(null) | `preorder(E)` → `preorder(C)` | **A B D** |
+| **Step 4** | **preorder(G)** 시작<br>N: 노드 **G** 방문 및 출력<br>L/R: 자식 없음(null) 호출 종료<br>↩️ **preorder(B)의 R(Step 2 대기분)로 복귀** | `preorder(E)` → `preorder(C)` | **A B D G** |
+| **Step 5** | **preorder(E)** 시작 (B의 오른쪽 자식)<br>N: 노드 **E** 방문 및 출력<br>L: preorder(H) 호출<br>R: 없음(null) | `preorder(C)` | **A B D G E** |
+| **Step 6** | **preorder(H)** 시작<br>N: 노드 **H** 방문 및 출력<br>L/R: 자식 없음(null) 호출 종료<br>↩️ **preorder(A)의 R(Step 1 대기분)로 복귀** | `preorder(C)` | **A B D G E H** |
+| **Step 7** | **preorder(C)** 시작 (A의 오른쪽 자식)<br>N: 노드 **C** 방문 및 출력<br>L: 없음(null) 호출 종료<br>R: preorder(F) 호출 | (Empty) | **A B D G E H C** |
+| **Step 8** | **preorder(F)** 시작<br>N: 노드 **F** 방문 및 출력<br>L/R: 자식 없음 호출 종료<br>🔚 **F → C → A 순으로 복귀 후 프로그램 종료** | (Empty) | **A B D G E H C F** |
 
 
-#### 특징 및 시간 복잡도  
+#### 3-3. 시간 및 공간 복잡도
+* **시간 복잡도:** $O(N)$
+    * 모든 노드를 정확히 한 번씩 방문하므로 노드 수($N$)에 비례합니다.
+* **공간 복잡도:** $O(H)$
+    * 트리의 높이($H$)만큼 재귀 스택이 쌓입니다.
+    * **주의:** 편향 트리(Skewed Tree)의 경우 높이가 $N$과 같아져 $O(N)$까지 늘어날 수 있습니다.
 
-시간 복잡도: $O(N)$ - 모든 노드를 한 번씩 방문하므로 노드 수에 비례   
-공간 복잡도: $O(H)$ - 트리의 높이( $H$ ) 만큼 재귀 스택이 쌓임    
-주요 활용 : 트리 복사, 전위 표기법(Prefix) 계산, 구조 출력  - 트리의 상단부터 아래로 훑는 작업에 유리  
-
-**장점** : 트리의 구조를 그대로 복사하거나 저장할 때 유용합니다. 뿌리 노드를 가장 먼저 알 수 있기 때문입니다. 
-**주의** : 편향 트리(Skewed Tree)의 경우 트리의 높이가 $N$ 과 같아져 공간 복잡도가 $O(N)$ 까지 늘어날 수 있습니다.  
-
+#### 3-4. 주요 활용 및 장단점
+* **주요 활용:** * **트리 복사:** 루트를 먼저 생성해야 하므로 구조를 그대로 복사할 때 유리합니다.  
+    * **전위 표기법(Prefix):** 수식 계산 시 연산자를 피연산자 앞에 배치하는 계산법에 사용됩니다.  
+    * **구조 출력:** 트리의 상단부터 계층적으로 출력할 때 적합합니다.  
+* **장점:** 뿌리(Root) 노드를 가장 먼저 파악할 수 있어 트리의 전체적인 골격을 잡는 데 유용합니다.  
 
 
