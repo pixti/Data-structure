@@ -29,22 +29,29 @@ public void preorder(Node n) { // 전위 순회
     }
 }
 ```
-#### 3-2. Preorder Traversal(전위 순회) 단계별 상세 실행 과정 (Step 1 ~ 8)       
-전위 순회는 **루트 노드를 먼저 방문**한 후, 왼쪽과 오른쪽 서브트리를 순차적으로 탐색하는 방식입니다.  
+#### 3-2. Preorder Traversal(전위 순회) 단계별 전체 실행 과정 (Step 1 ~ 17)
+전위 순회는 **V(방문) → L(왼쪽 서브트리) → R(오른쪽 서브트리)** 순서로 진행됩니다.   
+특정 노드에서 L-탐색을 수행하는 동안, 아직 방문하지 못한 R-탐색 작업은 시스템 스택에 쌓여 대기합니다.    
 
-* **수행 순서:** **N(현재 노드 방문)** → **L(왼쪽 서브트리 이동)** → **R(오른쪽 서브트리 이동)**  
-* **스택 동작:** 오른쪽 자식(R)은 현재 단계의 왼쪽(L) 과정이 완전히 종료될 때까지 시스템 스택(Stack)에서 대기합니다.  
-
-| 단계 | 실행 내용 (N → L → R) | 시스템 스택 (대기 중인 R) | 출력 결과 |  
+| 단계 | 실행 내용 (V → L → R) | 시스템 스택 (대기 중인 작업) | 출력 결과 |
 | :--- | :--- | :--- | :--- |
-| **Step 1** | **preorder(A)** 시작<br>N: 노드 **A** 방문 및 출력<br>L: preorder(B) 호출<br>R: preorder(C) 대기 | `preorder(C)` | **A** |
-| **Step 2** | **preorder(B)** 시작<br>N: 노드 **B** 방문 및 출력<br>L: preorder(D) 호출<br>R: preorder(E) 대기 | `preorder(E)` → `preorder(C)` | **A B** |
-| **Step 3** | **preorder(D)** 시작<br>N: 노드 **D** 방문 및 출력<br>L: preorder(G) 호출<br>R: 없음(null) | `preorder(E)` → `preorder(C)` | **A B D** |
-| **Step 4** | **preorder(G)** 시작<br>N: 노드 **G** 방문 및 출력<br>L/R: 자식 없음(null) 호출 종료<br>↩️ **preorder(B)의 R(Step 2 대기분)로 복귀** | `preorder(E)` → `preorder(C)` | **A B D G** |
-| **Step 5** | **preorder(E)** 시작 (B의 오른쪽 자식)<br>N: 노드 **E** 방문 및 출력<br>L: preorder(H) 호출<br>R: 없음(null) | `preorder(C)` | **A B D G E** |
-| **Step 6** | **preorder(H)** 시작<br>N: 노드 **H** 방문 및 출력<br>L/R: 자식 없음(null) 호출 종료<br>↩️ **preorder(A)의 R(Step 1 대기분)로 복귀** | `preorder(C)` | **A B D G E H** |
-| **Step 7** | **preorder(C)** 시작 (A의 오른쪽 자식)<br>N: 노드 **C** 방문 및 출력<br>L: 없음(null) 호출 종료<br>R: preorder(F) 호출 | (Empty) | **A B D G E H C** |
-| **Step 8** | **preorder(F)** 시작<br>N: 노드 **F** 방문 및 출력<br>L/R: 자식 없음 호출 종료<br>🔚 **F → C → A 순으로 복귀 후 프로그램 종료** | (Empty) | **A B D G E H C F** |
+| **Step 1** | **preorder(A)** 시작<br>**V**: `Visit(A)` 수행 -> **A** 출력<br>**L**: `preorder(B)` 호출<br>**R**: `preorder(C)` 대기 | `preorder(C)` | **A** |
+| **Step 2** | **preorder(B)** 시작<br>**V**: `Visit(B)` 수행 -> **B** 출력<br>**L**: `preorder(D)` 호출<br>**R**: `preorder(E)` 대기 | `preorder(E)`<br>→ `preorder(C)` | **A B** |
+| **Step 3** | **preorder(D)** 시작<br>**V**: `Visit(D)` 수행 -> **D** 출력<br>**L**: 없음(null) 호출 종료<br>**R**: `preorder(G)` 호출하며 이동 | `preorder(E)`<br>→ `preorder(C)` | **A B D** |
+| **Step 4** | **preorder(G)** 시작<br>**V**: `Visit(G)` 수행 -> **G** 출력<br>**L**: 없음(null) 호출 종료<br>**R**: 없음(null) 호출 종료 | `preorder(E)`<br>→ `preorder(C)` | **A B D G** |
+| **Step 5** | **preorder(G) 종료 및 복귀**<br>↩️ 부모 **D**의 **R-탐색 종료 시점**으로 복귀 | `preorder(E)`<br>→ `preorder(C)` | **A B D G** |
+| **Step 6** | **preorder(D) 종료 및 복귀**<br>↩️ 부모 **B**의 **L-탐색 종료 및 R-탐색 시작 시점**으로 복귀 | `preorder(E)`<br>→ `preorder(C)` | **A B D G** |
+| **Step 7** | **preorder(E)** 시작 (B의 대기분 실행)<br>**V**: `Visit(E)` 수행 -> **E** 출력<br>**L**: `preorder(H)` 호출하며 이동<br>**R**: 없음(null) 대기 | `preorder(C)` | **A B D G E** |
+| **Step 8** | **preorder(H)** 시작<br>**V**: `Visit(H)` 수행 -> **H** 출력<br>**L**: 없음(null) 호출 종료<br>**R**: 없음(null) 호출 종료 | `preorder(C)` | **A B D G E H** |
+| **Step 9** | **preorder(H) 종료 및 복귀**<br>↩️ 부모 **E**의 **L-탐색 종료 및 R-탐색 시작 시점**으로 복귀 | `preorder(C)` | **A B D G E H** |
+| **Step 10** | **preorder(E) 복귀 및 종료**<br>**R**: 없음(null) 확인 후 함수 종료<br>↩️ 부모 **B**의 **R-탐색 종료 시점**으로 복귀 | `preorder(C)` | **A B D G E H** |
+| **Step 11** | **preorder(B) 종료 및 복귀**<br>↩️ 부모 **A**의 **L-탐색 종료 및 R-탐색 시작 시점**으로 복귀 | `preorder(C)` | **A B D G E H** |
+| **Step 12** | **preorder(C)** 시작 (A의 대기분 실행)<br>**V**: `Visit(C)` 수행 -> **C** 출력<br>**L**: 없음(null) 호출 종료<br>**R**: `preorder(F)` 호출하며 이동 | (Empty) | **A B D G E H C** |
+| **Step 13** | **preorder(F)** 시작<br>**V**: `Visit(F)` 수행 -> **F** 출력<br>**L**: 없음(null) 호출 종료<br>**R**: 없음(null) 호출 종료 | (Empty) | **A B D G E H C F** |
+| **Step 14** | **preorder(F) 종료 및 복귀**<br>↩️ 부모 **C**의 **R-탐색 종료 시점**으로 복귀 | (Empty) | **A B D G E H C F** |
+| **Step 15** | **preorder(C) 종료 및 복귀**<br>↩️ 부모 **A**의 **R-탐색 종료 시점**으로 복귀 | (Empty) | **A B D G E H C F** |
+| **Step 16** | **preorder(A) 종료 및 최종 복귀**<br>A의 모든 V, L, R 작업 완료 및 시스템 스택 비워짐 | (Empty) | **A B D G E H C F** |
+| **Step 17** | **전체 프로그램 종료**<br>🔚 이진 트리 전위 순회 프로세스 완료 | (Empty) | **A B D G E H C F** |
 
 
 #### 3-3. 시간 및 공간 복잡도
@@ -58,6 +65,60 @@ public void preorder(Node n) { // 전위 순회
 * **주요 활용:** * **트리 복사:** 루트를 먼저 생성해야 하므로 구조를 그대로 복사할 때 유리합니다.  
     * **전위 표기법(Prefix):** 수식 계산 시 연산자를 피연산자 앞에 배치하는 계산법에 사용됩니다.  
     * **구조 출력:** 트리의 상단부터 계층적으로 출력할 때 적합합니다.  
-* **장점:** 뿌리(Root) 노드를 가장 먼저 파악할 수 있어 트리의 전체적인 골격을 잡는 데 유용합니다.  
+* **장점:** 뿌리(Root) 노드를 가장 먼저 파악할 수 있어 트리의 전체적인 골격을 잡는 데 유용합니다.
+
+### 4. Inorder Traversal (중위 순회, L→V→R)  
+중위 순회는 현재 노드(V)를 방문하기 전, 왼쪽 서브트리(L)를 먼저 완전히 탐색한 후 자기 자신을 처리하고, 마지막으로 오른쪽 서브트리(R)를 탐색하는 방식입니다.  
+이 방식은 이진 탐색 트리(BST)에서 데이터를 오름차순으로 정렬하여 출력할 때 핵심적으로 사용됩니다.  
+
+L (Left): 왼쪽 서브트리를 먼저 순회합니다.  
+V (Visit): 왼쪽 탐색이 끝나면 현재 노드를 방문합니다.  
+R (Right): 현재 노드 방문 후 오른쪽 서브트리를 순회합니다.  
+
+#### 4-1. 재귀적 정의:  
+각 노드에서의 순회는 동일하게 L → V → R 순서로 이루어집니다.  
+즉, 왼쪽 자식의 모든 방문이 **복귀(Return)** 되어야만 비로소 자신의 이름을 출력할 수 있는 '선탐색 후방문' 구조를 가집니다.  
+<img width="549" height="421" alt="image" src="https://github.com/user-attachments/assets/c9f0c077-4ccf-49a5-86bd-16ba6dba33fc" />
+
+```java
+public void inorder(Node n) { // 중위 순회
+    if (n != null) {
+        // 1. L: n의 왼쪽 서브트리를 순회하기 위해 재귀 호출
+        inorder(n.getLeft()); 
+        
+        // 2. V: n의 왼쪽 탐색이 끝나고 복귀하면 현재 노드 n 방문
+        System.out.print(n.getKey() + " "); 
+        
+        // 3. R: n의 오른쪽 서브트리를 순회하기 위해 재귀 호출
+        inorder(n.getRight()); 
+    }
+}
+```  
+
+#### 4-2. Inorder Traversal(중위 순회) 단계별 전체 실행 과정 (Step 1 ~ 19)
+중위 순회는 **L(왼쪽 서브트리) → V(방문/출력) → R(오른쪽 서브트리)** 순서로 진행됩니다.   
+왼쪽 자식의 `L, V, R`이 모두 완료되어야만 현재 노드의 `Visit`이 실행되므로, 시스템 스택에는 '나중에 방문할 내 이름'과 '오른쪽 탐색'이 함께 대기합니다.  
+
+| 단계 | 실행 내용 (L → V → R) | 시스템 스택 (대기 중인 작업) | 출력 결과 |
+| :--- | :--- | :--- | :--- |
+| **Step 1** | **inorder(A)** 시작<br>**L**: `inorder(B)` 호출<br>**V**: `Visit(A)` 대기, **R**: `inorder(C)` 대기 | `Visit(A), inorder(C)` | - |
+| **Step 2** | **inorder(B)** 시작<br>**L**: `inorder(D)` 호출<br>**V**: `Visit(B)` 대기, **R**: `inorder(E)` 대기 | `Visit(B), inorder(E)`<br>→ `Visit(A), inorder(C)` | - |
+| **Step 3** | **inorder(D)** 시작<br>**L**: 없음(null) 호출 종료<br>**V**: Node **D** 방문 및 출력 -> **D**<br>**R**: `inorder(G)` 호출하며 이동 | `Visit(B), inorder(E)`<br>→ `Visit(A), inorder(C)` | **D** |
+| **Step 4** | **inorder(G)** 시작<br>**L**: 없음(null) 호출 종료<br>**V**: Node **G** 방문 및 출력 -> **G**<br>**R**: 없음(null) 호출 종료 | `Visit(B), inorder(E)`<br>→ `Visit(A), inorder(C)` | **D G** |
+| **Step 5** | **inorder(G) 종료 및 복귀**<br>↩️ 부모 **D**의 **R-탐색 종료 시점**으로 복귀 | `Visit(B), inorder(E)`<br>→ `Visit(A), inorder(C)` | **D G** |
+| **Step 6** | **inorder(D) 종료 및 복귀**<br>↩️ 부모 **B**의 **L-탐색 종료 및 V-방문 시작 시점**으로 복귀 | `Visit(B), inorder(E)`<br>→ `Visit(A), inorder(C)` | **D G** |
+| **Step 7** | **inorder(B)** 복귀 및 재개<br>**V**: 대기하던 **Visit(B)** 수행 -> **B** 출력<br>**R**: 대기하던 **inorder(E)** 호출하며 이동 | `Visit(A), inorder(C)` | **D G B** |
+| **Step 8** | **inorder(E)** 시작<br>**L**: `inorder(H)` 호출<br>**V**: `Visit(E)` 대기, **R**: 없음(null) 대기 | `Visit(E)`<br>→ `Visit(A), inorder(C)` | **D G B** |
+| **Step 9** | **inorder(H)** 시작<br>**L**: 없음(null) 호출 종료<br>**V**: Node **H** 방문 및 출력 -> **H**<br>**R**: 없음(null) 호출 종료 | `Visit(E)`<br>→ `Visit(A), inorder(C)` | **D G B H** |
+| **Step 10** | **inorder(H) 종료 및 복귀**<br>↩️ 부모 **E**의 **L-탐색 종료 및 V-방문 시작 시점**으로 복귀 | `Visit(E)`<br>→ `Visit(A), inorder(C)` | **D G B H** |
+| **Step 11** | **inorder(E)** 복귀 및 재개<br>**V**: 대기하던 **Visit(E)** 수행 -> **E** 출력<br>**R**: 없음(null) 확인 후 종료 | `Visit(A), inorder(C)` | **D G B H E** |
+| **Step 12** | **inorder(E) 종료 및 복귀**<br>↩️ 부모 **B**의 **R-탐색 종료 시점**으로 복귀 | `Visit(A), inorder(C)` | **D G B H E** |
+| **Step 13** | **inorder(B) 종료 및 복귀**<br>↩️ 부모 **A**의 **L-탐색 종료 및 V-방문 시작 시점**으로 복귀 | `Visit(A), inorder(C)` | **D G B H E** |
+| **Step 14** | **inorder(A)** 복귀 및 재개<br>**V**: 대기하던 **Visit(A)** 수행 -> **A** 출력<br>**R**: 대기하던 **inorder(C)** 호출하며 이동 | (Empty) | **D G B H E A** |
+| **Step 15** | **inorder(C)** 시작<br>**L**: 없음(null) 호출 종료<br>**V**: Node **C** 방문 및 출력 -> **C**<br>**R**: `inorder(F)` 호출하며 이동 | (Empty) | **D G B H E A C** |
+| **Step 16** | **inorder(F)** 시작<br>**L**: 없음(null) 호출 종료<br>**V**: Node **F** 방문 및 출력 -> **F**<br>**R**: 없음(null) 호출 종료 | (Empty) | **D G B H E A C F** |
+| **Step 17** | **inorder(F) 종료 및 복귀**<br>↩️ 부모 **C**의 **R-탐색 종료 시점**으로 복귀 | (Empty) | **D G B H E A C F** |
+| **Step 18** | **inorder(C) 종료 및 복귀**<br>↩️ 부모 **A**의 **R-탐색 종료 시점**으로 복귀 | (Empty) | **D G B H E A C F** |
+| **Step 19** | **최종 종료**<br>🔚 이진 트리 중위 순회 프로세스 전체 완료 | (Empty) | **D G B H E A C F** |
 
 
