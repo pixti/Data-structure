@@ -2,6 +2,16 @@
 이진 트리에서 수행되는 대부분의 연산(출력, 복사, 삭제 등)은 트리를 순회하면서 진행됩니다.  
 모든 순회 방식은 루트 노드에서 시작하며, 각 노드를 반드시 1번씩 방문해야 종료됩니다.  
 
+<img width="599" height="380" alt="image" src="https://github.com/user-attachments/assets/ac1f8e73-f152-4b51-b782-bfe7a5f52212" />
+
+
+4가지 순회 알고리즘의 결과는 결론만 말하자면 이렇게 나오게 됩니다.  
+  
+전위(VLR): `A B D G E H C F` (Root가 맨 앞)  
+중위(LVR): `D G B H E A C F` (Root A가 중간)  
+후위(LRV): `G D H E B F C A` (Root A가 맨 뒤)  
+레벨(BFS): `A B C D E F G H` (층별/좌우)  
+
 ### 3. Preorder Traversal (전위 순회, V→L→R) 
 전위 순회는 이름 그대로 현재 노드를 먼저 처리한 후, 자식 노드들을 탐색합니다. 탐색의 흐름은 항상 왼쪽에서 오른쪽으로 진행됩니다.  
   
