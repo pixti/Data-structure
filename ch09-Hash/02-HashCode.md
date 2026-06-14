@@ -13,27 +13,33 @@
 ### ① Integer 객체
 * 별도의 해시 연산 과정 없이, 자신이 가진 정수값(`key`) 자체를 그대로 반환합니다.
 
+```java
 > public int hashCode() {
 >     return key;
 > }
+```
 
 ### ② Boolean 객체
-* 값이 `true`일 경우 **1231**, `false`일 경우 **1237**이라는 고정된 소수(Prime number)를 반환합니다.
+* 값이 `true`일 경우 **1231**, `false`일 경우 **1237** 이라는 고정된 소수(Prime number)를 반환합니다.
 
+```java
 > public int hashCode() {
 >     if (key) return 1231;
 >     else return 1237;
 > }
+```
 
 ### ③ Double 객체
 * 64비트(8바이트)의 부동소수점 데이터를 32비트(4바이트) 크기의 `int`로 압축하기 위해 **비트 연산(XOR)** 을 사용합니다.
 * 데이터를 IEEE 64-bit 포맷으로 변환한 뒤, **최상위 32비트와 최하위 32비트를 XOR(`^`) 연산**합니다. 데이터의 모든 비트를 고르게 참여시켜 충돌을 줄이기 위함입니다.
 * **성능적 이점:** 복잡한 수학 연산이 아니라 하드웨어 수준에서 처리되는 **비트(Bit) 연산자**를 사용하기 때문에, 연산 속도가 매우 빠르고 처리에 걸리는 시간이 거의 없다는 큰 장점이 있습니다.
 
+```java
 > public int hashCode() {
 >     long bits = doubleToLongBits(key);
 >     return (int) (bits ^ (bits >>> 32));
 > }
+```
 
 ## 1-3. String 객체의 hashCode() 구현 원리
 문자열은 내부 문자 배열의 각 문자(`char`)가 가진 **아스키코드(ASCII) 혹은 유니코드(Unicode) 정수값**을 바탕으로, 이를 **31진법 체계의 숫자**로 보고 다항식 형태로 해시값을 계산합니다.
@@ -47,12 +53,14 @@ $$hash = \sum_{i=0}^{n-1} s[i] \cdot 31^{n-1-i}$$
 * $hash = 98 \cdot 31^3 + 97 \cdot 31^2 + 108 \cdot 31^1 + 108 \cdot 31^0$
 * 루프를 돌며 최적화된 연산: $108 + 31 \cdot (108 + 31 \cdot (97 + 31 \cdot (98))) = 3016191$
 
+```java
 > public int hashCode() {
 >     int hash = 0;
 >     for (int i = 0; i < length(); i++)
 >         hash = s[i] + (31 * hash);
 >     return hash;
 > }
+```
 
 ## 1-4. 해시 테이블(Hash Table) 적용 시 주의사항
 자바를 이용해 해시 테이블을 직접 구현할 때, 객체의 `hashCode()` 반환값을 곧바로 배열의 인덱스(Index)로 사용할 수 없습니다. 반환값이 음수일 수도 있고, 해시 테이블의 크기를 초과할 수도 있기 때문입니다.
@@ -61,10 +69,11 @@ $$hash = \sum_{i=0}^{n-1} s[i] \cdot 31^{n-1-i}$$
 1. **음수 방지 (비트 마스킹):** 반환된 32비트 정수의 부호 비트(최상위 비트)를 0으로 지우기 위해 `0x7fffffff`와 비트 AND(`&`) 연산을 수행하여 무조건 양수로 만듭니다. (이 역시 비트 연산이라 매우 빠릅니다.)
 2. **크기 맞춤 (모듈러 연산):** 얻어진 양수를 해시 테이블의 크기($M$)로 나눈 나머지(`% M`)를 최종 인덱스로 사용합니다.
 
+```java
 > private int hash(Key k) {
 >     return (k.hashCode() & 0x7fffffff) % M;
 > }
-
+```
 ---
 
 ## 2. 해시 테이블의 충돌(Collision)과 해결 방법
@@ -143,6 +152,7 @@ $$hash = \sum_{i=0}^{n-1} s[i] \cdot 31^{n-1-i}$$
 ### ① 전역 변수 및 해시 함수
 `0x7fffffff`와 비트 AND 연산을 하여 부호를 없앤 후 테이블 크기 $M$으로 나눈 나머지를 구합니다.
 
+```java
 > private int M = 13; // 테이블 크기
 > private K[] a = (K[]) new Object[M]; // 키(Key)를 저장할 배열
 > private V[] d = (V[]) new Object[M]; // 데이터를 저장할 배열
@@ -150,10 +160,12 @@ $$hash = \sum_{i=0}^{n-1} s[i] \cdot 31^{n-1-i}$$
 > private int hash(K key){
 >     return (key.hashCode() & 0x7fffffff) % M; 
 > }
+```
 
 ### ② 삽입 연산 (put)
 빈 공간(`null`)을 찾거나, 이미 동일한 키가 있으면 값을 갱신하고, 둘 다 아니면 다음 칸으로 이동(`j++`)하는 로직입니다. 
 
+```java
 > private void put(K key, V data) {
 >     int initialpos = hash(key); // 초기 위치 지정
 >     int i = initialpos, j = 1;
@@ -170,10 +182,12 @@ $$hash = \sum_{i=0}^{n-1} s[i] \cdot 31^{n-1-i}$$
 >         i = (initialpos + j++) % M; // 자리가 없으면 다음 위치로 (원형 탐색)
 >     } while (i != initialpos); // 한 바퀴를 다 돌면 종료 (테이블이 꽉 찬 경우)
 > }
+```
 
 ### ③ 탐색 연산 (get)
 초기 위치부터 순차적으로 탐색하며, 빈 칸(`null`)을 만나면 데이터가 없다고 판단하여 `null`을 반환합니다.
 
+```java
 > public V get(K key) {
 >     int initialpos = hash(key);
 >     int i = initialpos, j = 1;
@@ -185,6 +199,7 @@ $$hash = \sum_{i=0}^{n-1} s[i] \cdot 31^{n-1-i}$$
 >     }
 >     return null; // 탐색 실패 (데이터 없음)
 > }
+```
 
 ---
 
@@ -211,12 +226,12 @@ $$hash = \sum_{i=0}^{n-1} s[i] \cdot 31^{n-1-i}$$
 ### ③ 연산 오버헤드 (속도 저하)
 * 선형 조사의 단순 덧셈과 달리, 매 탐색마다 제곱값(곱셈)을 계산해야 하므로 연산 시간이 추가되어 미세한 성능 저하가 발생합니다.
 
-
 ## 4-3. 자바(Java) 코드 구현 예시
 아래는 이차 조사를 적용한 해시 테이블의 자바 구현 코드입니다. 무한 루프(빈 공간을 영영 찾지 못하는 상황)를 방지하기 위해 데이터의 수(`N`)가 테이블 크기(`M`)보다 작을 때만 반복하도록 처리합니다.
 
 ### ① 삽입 연산 (put)
 
+```java
 > private void put(K key, V data) {
 >     int initialpos = hash(key); // 초기 위치 지정
 >     int i = initialpos, j = 1;
@@ -235,9 +250,11 @@ $$hash = \sum_{i=0}^{n-1} s[i] \cdot 31^{n-1-i}$$
 >         i = (initialpos + j * j++) % M; 
 >     } while (N < M); // 테이블이 가득 차지 않은 경우에만 반복
 > }
+```
 
 ### ② 탐색 연산 (get)
 
+```java
 > public V get(K key) {
 >     int initialpos = hash(key);
 >     int i = initialpos, j = 1;
@@ -250,6 +267,7 @@ $$hash = \sum_{i=0}^{n-1} s[i] \cdot 31^{n-1-i}$$
 >     }
 >     return null; // 탐색 실패 (데이터 없음)
 > }
+```
 
 ---
 
@@ -275,7 +293,6 @@ $$hash = \sum_{i=0}^{n-1} s[i] \cdot 31^{n-1-i}$$
 ### ③ 단점: 연산 속도 저하 (오버헤드)
 * 충돌이 발생할 때마다 두 개의 독립적인 해시 함수를 모두 계산해야 하므로, 단순 덧셈(선형)이나 1번의 곱셈(이차)을 사용하는 **다른 탐색 방식들보다 연산량이 많아 실행 속도가 가장 느리다**는 치명적인 단점이 있습니다.
 
-
 ## 5-3. 구체적인 작동 예시
 * **테이블 크기 ($M$):** 13 (소수)
 * **제1 해시함수:** $h_1(key) = key \pmod{13}$
@@ -287,11 +304,11 @@ $$hash = \sum_{i=0}^{n-1} s[i] \cdot 31^{n-1-i}$$
 2. 점프 크기: $7 - (35 \pmod 7) = 7 - 0 = 7$
 3. 다음 위치: $(9 + 1 \cdot 7) \pmod{13} = 3$ 번 인덱스로 즉시 이동!
 
-
 ## 5-4. 자바(Java) 코드 구현 예시
 
 ### ① 삽입 연산 (put)
 
+```java
 > private void put(K key, V data) {
 >     int initialpos = hash(key);   // 초기 위치
 >     int i = initialpos;
@@ -314,9 +331,11 @@ $$hash = \sum_{i=0}^{n-1} s[i] \cdot 31^{n-1-i}$$
 >         j++;
 >     } while (N < M); // 테이블이 꽉 차기 전까지만 반복
 > }
+```
 
 ### ② 탐색 연산 (get)
 
+```java
 > public V get(K key) {
 >     int initialpos = hash(key);
 >     int i = initialpos;
@@ -333,6 +352,7 @@ $$hash = \sum_{i=0}^{n-1} s[i] \cdot 31^{n-1-i}$$
 >     }
 >     return null;                  // 빈 칸을 만나면 탐색 실패 (null 반환)
 > }
+```
 
 ---
 
@@ -351,12 +371,12 @@ $$hash = \sum_{i=0}^{n-1} s[i] \cdot 31^{n-1-i}$$
 * 초기 해시값이 우연히 같은 동의어(Synonym) 데이터들은 동일한 시드(Seed) 기반의 동일한 난수 시퀀스를 부여받게 됩니다.
 * 결국 같은 해시값을 가진 데이터들끼리는 **완전히 똑같은 무작위 점프 경로를 따라 이동하며 또다시 뭉치게 되는데**, 이를 **3차 군집화**라고 부릅니다.
 
-
 ## 6-4. 자바(Java) 코드 구현 예시
 삽입(`put`)과 탐색(`get`) 연산 모두에서 `rand.setSeed(10)`으로 동일한 시드를 설정하는 것이 코드의 핵심입니다.
 
 ### ① 삽입 연산 (put)
 
+```java
 > private void put(K key, V data) {
 >     int initialpos = hash(key);   // 초기 위치
 >     int i = initialpos;
@@ -379,9 +399,11 @@ $$hash = \sum_{i=0}^{n-1} s[i] \cdot 31^{n-1-i}$$
 >         i = (initialpos + rand.nextInt(1000)) % M; 
 >     } while (N < M);
 > }
+```
 
 ### ② 탐색 연산 (get)
 
+```java
 > public V get(K key) {
 >     Random rand = new Random();
 >     rand.setSeed(10);             // 삽입 때와 완벽히 같은 시드값 사용
@@ -398,5 +420,6 @@ $$hash = \sum_{i=0}^{n-1} s[i] \cdot 31^{n-1-i}$$
 >     }
 >     return null;                  // 탐색 실패
 > }
+```
 
 ---
